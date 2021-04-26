@@ -1,4 +1,3 @@
-from ...db.models import AutopostingFunction
 from ...modules.keyboard import KeyboardInline
 from itertools import islice
 

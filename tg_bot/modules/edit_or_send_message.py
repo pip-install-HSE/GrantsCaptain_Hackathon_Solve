@@ -5,7 +5,7 @@ from aiogram import types, Bot
 from aiogram.dispatcher import FSMContext
 from aiogram.utils.exceptions import MessageNotModified, TelegramAPIError
 
-from tg_bot.db.models import Message, Chat, BotUser
+from tg_bot.db.models import BotUser
 
 
 async def delete_message_with_protect(bot, chat_id, msg_id):
@@ -31,12 +31,7 @@ async def edit_or_send_message(bot: Bot, message_or_call, state: FSMContext, par
     async with state.proxy() as data:
         prev_msg_id = data.get("prev_msg_id")
 
-        if prev_msg_id and message.chat.id != message.from_user.id and not message.from_user.is_bot:
-            msg_model, _ = await Message.get_or_create(tg_id=prev_msg_id,
-                                                       chat=chat if chat else await Chat.get(tg_id=chat_id if chat_id else message.chat.id),
-                                                       bot_user=bot_user if bot_user else await BotUser.get(tg_id=message.from_user.id))
-        else:
-            msg_model = None
+        msg_model = None
 
         if await delete_message_with_protect(bot, message.chat.id if not chat_id else chat_id, prev_msg_id):
             data.update({"prev_msg_id": None})

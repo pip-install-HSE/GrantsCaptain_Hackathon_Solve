@@ -11,9 +11,10 @@ class KeyboardInline:
         for row in self.list_keyboard:
             self.keyboard.row_width = len(row)
             self.keyboard.add(*[InlineKeyboardButton(button,
-                                                     callback_data=row[button] if not "url:" in row[button] else None,
+                                                     callback_data=row[button] if not "url:" in row[button] and not "in_q" in row[button] else None,
                                                      url=row[button].replace("url:", "") if "url:" in row[
-                                                         button] else None)
+                                                         button] else None,
+                                                     switch_inline_query_current_chat=" " if "in_q" in row[button] else None)
                                 for button in row])
 
     def get(self):

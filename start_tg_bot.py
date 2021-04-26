@@ -4,6 +4,7 @@ from tortoise import Tortoise
 import aioschedule
 
 from tg_bot.load_all import bot
+from tg_bot.modules.API_to_DB import update_regions, update_categories, update_forms
 
 
 async def on_shutdown(dp):
@@ -20,9 +21,9 @@ async def on_startup(dp):
 
 
 async def scheduler():
-    # aioschedule.every(1).minutes.do(delete_old_tasks)
-    # aioschedule.every(1).minutes.do(delete_old_messages)
-    # aioschedule.every(1).minutes.do(send_autoposts_by_datetime)
+    aioschedule.every(1).minutes.do(update_regions)
+    aioschedule.every(1).minutes.do(update_categories)
+    aioschedule.every(1).minutes.do(update_forms)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
